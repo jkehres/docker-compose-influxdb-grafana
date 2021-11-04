@@ -1,11 +1,25 @@
 apiVersion: 1
 datasources:
-  - name: InfluxDB
+  - name: InfluxDB(GraphQL)
     type: influxdb
     access: proxy
-    database: db0
-    user: admin
-    password: admin
+    database: $V1_DB_NAME
+    user: $V1_AUTH_USERNAME
+    secureJsonData:
+      password: $V1_AUTH_PASSWORD
     url: http://influxdb:8086
     isDefault: true
     editable: true
+
+  - name: InfluxDB(Flux)
+    version: 2
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    jsonData:
+      defaultBucket: $DOCKER_INFLUXDB_INIT_BUCKET
+      httpMode: POST
+      organization: $DOCKER_INFLUXDB_INIT_ORG
+      version: Flux
+    secureJsonData:
+      token: $DOCKER_INFLUXDB_INIT_ADMIN_TOKEN

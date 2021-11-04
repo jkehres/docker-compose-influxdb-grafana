@@ -8,6 +8,8 @@ Multi-container Docker app built from the following services:
 
 Useful for quickly setting up a monitoring stack for performance testing. Combine with [serverless-artillery](https://github.com/Nordstrom/serverless-artillery) and [artillery-plugin-influxdb](https://github.com/Nordstrom/artillery-plugin-influxdb) to create a performance testing environment in minutes.
 
+Now with built-in support for influxDB 2.x 
+
 ## Quick Start
 
 To start the app:
@@ -68,9 +70,13 @@ The app creates a default InfluxDB database called `db0`.
 
 ## Data Sources
 
-The app creates a Grafana data source called `InfluxDB` that's connected to the default IndfluxDB database (e.g. `db0`).
+The app creates two Grafana data sources called `InfluxDB(GraphQL)` (with legacy authentication) and `InfluxDB(Flux)` which are connected to the default IndfluxDB database.
 
 To provision additional data sources, see the Grafana [documentation](http://docs.grafana.org/administration/provisioning/#datasources) and add a config file to `./grafana-provisioning/datasources/` before starting the app.
+
+## InfluxDB scripts
+
+Scripts located in `influxDB-scripts` are excuted after the inital setup task of influxDB. At the moment, the script `setup-v1.sh` takes care of the `dbrp` mappings and the creation of v1 compatible users.
 
 ## Dashboards
 

@@ -6,10 +6,18 @@ services:
       - '8086:8086'
     volumes:
       - influxdb-storage:/var/lib/influxdb
+      - ./influxDB-scripts:/docker-entrypoint-initdb.d
     environment:
-      - INFLUXDB_DB=db0
-      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
-      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
+      - V1_DB_NAME=${V1_DB_NAME}
+      - V1_RP_NAME=${V1_RP_NAME}
+      - V1_AUTH_USERNAME=${V1_AUTH_USERNAME}
+      - V1_AUTH_PASSWORD=${V1_AUTH_PASSWORD}
   chronograf:
     image: chronograf:latest
     ports:
@@ -28,12 +36,18 @@ services:
       - '3000:3000'
     volumes:
       - grafana-storage:/var/lib/grafana
-      - ./grafana-provisioning/:/etc/grafana/provisioning
+      - ./grafana-provisioning/:/etc/grafana/provisioning/
     depends_on:
       - influxdb
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - V1_DB_NAME=${V1_DB_NAME}
+      - V1_AUTH_USERNAME=${V1_AUTH_USERNAME}
+      - V1_AUTH_PASSWORD=${V1_AUTH_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
 volumes:
   influxdb-storage:
   chronograf-storage:
